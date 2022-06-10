@@ -1,0 +1,622 @@
+ POSISI MOBIL mengarah ke arah mana
+ DEPAN = 1
+ KIRI = 2
+ KANAN = 3
+ BELAKANG = 4
+
+ variable ini untuk fungsi pengecekan Arah_Kepala_Car() dan check_tempat_kosong()
+
+ 
+ Terdapat Class bernama Car yang memiliki atribut: 
+
+ 1. Posisi_X
+ 2. Posisi_Y
+ 3. Arah_Kepala_Car = 1  (arah ke atas)
+ 
+ Dan terdapat method :
+ 1. check_arah_kepala() => yang akan menghasilkan arah Arah_Kepala_Car saat ini
+ 2. check_posisi_Baris() => yang akan menghasilkan Posisi_Y saat ini
+ 3. check_posisi_Kolom() => yang akan menghasilkan Posisi_X saat ini
+ 4. forward()           => menghasilkan Car maju ke posisi selanjutnya
+ 5. check_tempat_kosong() => mengecek apakah arah pandangan mobil di depannya bebas atau tidak.
+    artinya, jika bagian depannya kosong maka akan maju kedepan
+ 6. putar_kiri()        => membuat mobil rotate ke kiri (90 derajat) dari posisinya tergantung pada Arah_Kepala_Car nya
+ 7. putar_kanan()        => membuat mobil rotate ke kanan (90 derajat) dari posisinya tergantung pada Arah_Kepala_Car nya
+
+
+selain itu terdapat juga Class Box yang menjadi grid dasar posisi frame apps ini
+
+check_arah_kepala() {
+    return Arah_Kepala_Car
+}
+
+check_posisi_Baris() {
+    return Posisi_X
+}
+
+check_posisi_Kolom() {
+    return Posisi_Y
+}
+
+
+
+terdapat arah constant dari sudut pandang pengguna yaitu 
+
+UTARA = 1
+SELATAN = -1
+TIMUR = 2
+BARAT = -2
+
+
+check_tempat_kosong(argumen){
+    if (Arah_Kepala_Car == UTARA){
+        if(argumen == KANAN){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom++] => if(box[posisiKolom][posisiBaris++] != box.wall)
+            jika kosong return true
+        }
+        else if(argumen == KIRI){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom--]
+            jika kosong return true
+        }
+        else if(argumen == DEPAN){
+            cek posisi box pada bagian box[posisiBaris--][posisiKolom]
+            jika kosong return true
+        }
+        else if(argumen == BELAKANG){
+            cek posisi box pada bagian box[posisiBaris++][posisiKolom]
+            jika kosong return true
+        }
+    }
+
+    if (Arah_Kepala_Car == TIMUR){
+        if(argumen == KANAN){
+            cek posisi box pada bagian box[posisiBaris++][posisiKolom] 
+            jika kosong return true
+        }
+        else if(argumen == KIRI){
+            cek posisi box pada bagian box[posisiBaris--][posisiKolom]
+            jika kosong return true
+        }
+        else if(argumen == DEPAN){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom++]
+            jika kosong return true
+        }
+        else if(argumen == BELAKANG){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom--]
+            jika kosong return true
+        }
+    }
+    
+
+    if (Arah_Kepala_Car == SELATAN){
+        if(argumen == KANAN){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom--] 
+            jika kosong return true
+        }
+        else if(argumen == KIRI){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom++]
+            jika kosong return true
+        }
+        else if(argumen == DEPAN){
+            cek posisi box pada bagian box[posisiBaris++][posisiKolom]
+            jika kosong return true
+        }
+        else if(argumen == BELAKANG){
+            cek posisi box pada bagian box[posisiBaris--][posisiKolom]
+            jika kosong return true
+        }
+    }
+    
+    if (Arah_Kepala_Car == BARAT){
+        if(argumen == KANAN){
+            cek posisi box pada bagian box[posisiBaris--][posisiKolom] 
+            jika kosong return true
+        }
+        else if(argumen == KIRI){
+            cek posisi box pada bagian box[posisiBaris++][posisiKolom]
+            jika kosong return true
+        }
+        else if(argumen == DEPAN){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom--]
+            jika kosong return true
+        }
+        else if(argumen == BELAKANG){
+            cek posisi box pada bagian box[posisiBaris][posisiKolom++]
+            jika kosong return true
+        }
+    }
+}
+
+
+putar_kanan(){
+    if (Arah_Kepala_Car == UTARA){
+        Arah_Kepala_Car = TIMUR
+            rotate car 90 derajat
+    }
+    else if (Arah_Kepala_Car == TIMUR){
+        Arah_Kepala_Car = SELATAN
+            rotate car 90 derajat
+    }
+    else if (Arah_Kepala_Car == SELATAN){
+        Arah_Kepala_Car = BARAT
+            rotate car 90 derajat
+    }
+    else if (Arah_Kepala_Car == BARAT){
+        Arah_Kepala_Car = UTARA
+            rotate car 90 derajat
+    }
+}
+putar_kiri(){
+    if (Arah_Kepala_Car == UTARA){
+        Arah_Kepala_Car = BARAT
+            rotate car -90 derajat
+    }
+    else if (Arah_Kepala_Car == TIMUR){
+        Arah_Kepala_Car = UTARA
+            rotate car -90 derajat
+    }
+    else if (Arah_Kepala_Car == SELATAN){
+        Arah_Kepala_Car = TIMUR
+            rotate car -90 derajat
+    }
+    else if (Arah_Kepala_Car == BARAT){
+        Arah_Kepala_Car = SELATAN
+            rotate car -90 derajat
+    }
+}
+
+
+
+pencarian = 0
+posisiBaris = car.check_posisi_Baris()
+posisiKolom = car.check_posisi_Kolom()
+
+posisiTarget_X = x
+posisiTarget_Y = y
+
+if (posisiBaris > posisiTarget_Y && posisiKolom > posisiTarget_X){
+    if (car.check_arah_kepala() == UTARA) {
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if( car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }else if( car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }else if( car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+
+    else if (car.check_arah_kepala() == BARAT){
+        if (car.check_tempat_kosong() == DEPAN){
+            car.forward()
+        }
+        else if ( car.check_tempat_kosong() == KANAN){
+            car.putar_kanan()
+        }
+        else if ( car.check_tempat_kosong() == KIRI){
+            car.putar_kiri()
+        }
+        else {
+            car.putar_kiri()
+        }
+    }
+
+    else if (car.check_arah_kepala() == TIMUR){
+        if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if(car.check_tempat_kosong(KANAN)){
+            car.putar_kiri()
+        }
+    }
+
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if(car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kiri()
+            car.putar_kiri()
+        }
+    }
+}
+
+
+else if (posisiBaris > posisiTarget_Y && posisiKolom < posisiTarget_X){
+    if(car.check_arah_kepala() == UTARA){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else {
+            putar_kiri()
+        }
+    }
+
+    else if (car.check_arah_kepala() == BARAT){
+        if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+
+    else if (car.check_arah_kepala() == TIMUR){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+
+    else if (car.check_arah_kepala() == SELATAN){
+        if(car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+}
+
+
+if (posisiBaris < posisiTarget_Y && posisiKolom > posisiTarget_X){
+    if (car.check_arah_kepala() == UTARA) {
+        if(car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+
+    else if (car.check_arah_kepala() == BARAT){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if(car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if(car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+
+    else if (car.check_arah_kepala() == TIMUR){
+        if(car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+
+
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+}
+
+
+else if (posisiBaris < posisiTarget_Y && posisiKolom > posisiTarget_X){
+    if(car.check_arah_kepala() == UTARA){
+        if(car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == BARAT){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+
+    else if (car.check_arah_kepala() == TIMUR){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+}
+
+if ( posisiBaris < posisiTarget_Y && posisiKolom == posisiTarget_X){
+    if (car.check_arah_kepala() == BARAT) {
+        if(car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if(car.check_arah_kepala() == TIMUR){
+        if(car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+    else if ( car.check_arah_kepala() == UTARA){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else {
+            car.putar_kiri()
+        }
+    }
+
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+}
+
+else if (posisiBaris > posisiTarget_Y && posisiKolom == posisiTarget_X){
+    if (car.check_arah_kepala() == BARAT){
+        if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == TIMUR){
+        if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == UTARA){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if(car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if(car.check_arah_kepala() == SELATAN) {
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+}
+
+
+if (posisiBaris == posisiTarget_Y && posisiKolom > posisiTarget_X){
+    if (car.check_arah_kepala() == UTARA){
+        if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANA)){
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+    else if (car.check_arah_kepala() == BARAT){
+        if(car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == TIMUR){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+}
+
+else if (posisiBaris == posisiTarget_Y && posisiKolom < posisiTarget_X){
+    if (car.check_arah_kepala() == UTARA){
+        if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+    }
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == BARAT) {
+        if (car.check_tempat_kosong(DEPAN)) {
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+    }
+    else if (car.check_arah_kepala() == SELATAN){
+        if (car.check_tempat_kosong(DEPAN)){
+            car.forward()
+        }
+        else if (car.check_tempat_kosong(KANAN)){
+            car.putar_kanan()
+        }
+        else if (car.check_tempat_kosong(KIRI)){
+            car.putar_kiri()
+        }
+        else if (car.check_tempat_kosong(BELAKANG)){
+            car.putar_kanan()
+            car.putar_kanan()
+        }
+    }
+}
+
+
+if (pencarian == 1) {
+    break
+} 
+
+
+if (posisiBaris == posisiTarget_Y && posisiKolom == posisiTarget_X){
+    random sekali lagi posisi posisiTarget_X
+    random sekali lagi posisi posisiTarget_Y
+    pencarian = 1
+}
+
