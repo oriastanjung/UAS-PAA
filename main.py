@@ -20,7 +20,6 @@ box_height = window_height // rows
 grid = []
 
 
-
 class Box:
     def __init__(self, i, j):
         self.x = i
@@ -39,7 +38,6 @@ for i in range(columns):
     for j in range(rows):
         arr.append(Box(i, j))
     grid.append(arr)
-
 
 
 # VARIABLE CONSTANT POSISI COURIER DARI SUDUT PANDANG 2D
@@ -77,6 +75,19 @@ class Courier :
             self.posisiX -= 1
         elif(self.Arah_Kepala_Courier == TIMUR):
             self.posisiX += 1
+    def putar_belakang(self):
+        if (self.Arah_Kepala_Courier == UTARA):
+            self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 180)
+            self.Arah_Kepala_Courier = SELATAN
+        elif(self.Arah_Kepala_Courier == TIMUR):
+            self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 180)
+            self.Arah_Kepala_Courier = BARAT
+        elif(self.Arah_Kepala_Courier == SELATAN):
+            self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 180)
+            self.Arah_Kepala_Courier = UTARA
+        elif(self.Arah_Kepala_Courier == BARAT):
+            self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 180)
+            self.Arah_Kepala_Courier = TIMUR
 
     def putar_kanan(self):
         if (self.Arah_Kepala_Courier == UTARA):
@@ -95,16 +106,16 @@ class Courier :
     def putar_kiri(self):
         if (self.Arah_Kepala_Courier == UTARA):
             self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 90)
-            self.Arah_Kepala_Courier = TIMUR
+            self.Arah_Kepala_Courier = BARAT
         elif(self.Arah_Kepala_Courier == TIMUR):
             self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 90)
-            self.Arah_Kepala_Courier = SELATAN
+            self.Arah_Kepala_Courier = UTARA
         elif(self.Arah_Kepala_Courier == SELATAN):
             self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 90)
-            self.Arah_Kepala_Courier = BARAT
+            self.Arah_Kepala_Courier = TIMUR
         elif(self.Arah_Kepala_Courier == BARAT):
             self.Kurir_PICTURE = pygame.transform.rotate(self.Kurir_PICTURE, 90)
-            self.Arah_Kepala_Courier = UTARA
+            self.Arah_Kepala_Courier = SELATAN
 
     def cek_tempat_kosong(self,arah_cek,x,y):
         
@@ -182,13 +193,38 @@ def main():
     posisi_finis_baris = 0
 
 #Membuat random wall
-    for i in range(25) :
+    for i in range(20) :
         wall_box_x = random.randint(0, columns - 1)
         wall_box_y = random.randint(0, rows - 1)
         wall_box = grid[wall_box_y][wall_box_x]
         wall_box.wall = True
       
-    
+# # membuat wall di sisi2
+#     for i in range(columns-1):
+#         wall_sisi_y = 0
+#         wall_sisi_x = i
+#         wall_sisi = grid[wall_sisi_x][wall_sisi_y]
+#         wall_sisi.wall = True
+#     for i in range(columns-1):
+#         wall_sisi_y = rows-1
+#         wall_sisi_x = i
+#         wall_sisi = grid[wall_sisi_x][wall_sisi_y]
+#         wall_sisi.wall = True
+#     for i in range (rows-1):
+#         wall_sisi_y = i
+#         if (i == 0):
+#             wall_sisi_x = 0
+#         wall_sisi = grid[wall_sisi_x][wall_sisi_y]
+#         wall_sisi.wall = True
+
+#     for i in range (rows):
+#         wall_sisi_y = i
+#         wall_sisi_x = columns-1
+#         wall_sisi = grid[wall_sisi_x][wall_sisi_y]
+#         wall_sisi.wall = True
+
+
+
  #Membuat posisi Start Courier
     for i in range(columns * rows):
         kurir_box_x = random.randint(0, columns - 1)
@@ -201,15 +237,19 @@ def main():
     
     
 #Membuat Target Finish
-    target_box_x = random.randint(0, columns - 1)
-    target_box_y = random.randint(0, rows - 1)
-    target_box = grid[target_box_x][target_box_y]
+    for i in range(columns * rows):
+        target_box_x = random.randint(0, columns - 1)
+        target_box_y = random.randint(0, rows - 1)
+        if(grid[target_box_x][target_box_y].wall == False):
+            target_box = grid[target_box_x][target_box_y]
+            break
+    
     target_box.target = True
     target_box_set = True
     target = pygame.image.load('flag.png')
     posisi_finis_kolom = target_box_x
     posisi_finis_baris = target_box_y
-    
+    pencarian = 0
     # MAIN PROGRAM ADA DI BAWAH INI
     start = 0
     while True:
@@ -250,7 +290,7 @@ def main():
                 grid[posisiStartY][posisiStartX].draw(window, (20,20,20))
         ###### END CODE UNTUK POSISI START ADA GAMBAR LALU SETELAH SEARCH POSISI DIGANTI BOX JALAN #######
 
-
+        
 
 
 
@@ -321,8 +361,442 @@ def main():
             # print("\n")
             #kurirUtama.putar_kanan()
             
-            time.sleep(1)
+            # print("running")
 
+            # posisi sampai di bendera
+            if (posisiBarisCourier == posisi_finis_baris and posisiKolomCourier == posisi_finis_kolom):
+                
+                for i in range(columns * rows):
+                    target_box_x = random.randint(0, columns - 1)
+                    target_box_y = random.randint(0, rows - 1)
+                    if(grid[target_box_x][target_box_y].wall == False):
+                        target_box = grid[target_box_x][target_box_y]
+                        break
+    
+                target_box.target = True
+                target_box_set = True
+                target = pygame.image.load('flag.png')
+                posisi_finis_kolom = target_box_x
+                posisi_finis_baris = target_box_y
+                
+                pencarian = pencarian + 1
+            # kurirUtama.putar_belakang()
+            # print(kurirUtama.check_arah_kepala())
+
+            # yg bug : 1, 3, 7
+
+            # 1 posisi kurir di bawah dan kanan bendera 
+            if (posisiBarisCourier > posisi_finis_baris and posisiKolomCourier > posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    #depan , kiri, kanan, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+                elif (kurirUtama.check_arah_kepala() == BARAT):
+                    # depan, kanan, kiri, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # kiri, belakang, depan, kanan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                   # kanan, belakang, depan, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                
+            
+            # 2 posisi kurir selalu di kiri dan di bawah bendera
+            elif (posisiBarisCourier > posisi_finis_baris and posisiKolomCourier < posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    # depan, kanan, belakang, kiri
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+                        
+                elif (kurirUtama.check_arah_kepala() == BARAT): 
+                    # kanan, belakang, kiri, depan
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+
+
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # depan, kiri, kanan, blekang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+                
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                    # kiri, belakang, depan, kanan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+
+
+                
+            # 3 poisis kurir di kanan dan di atas bendera
+            if (posisiBarisCourier < posisi_finis_baris and posisiKolomCourier  > posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    # kiri, belakang, depam, kanan
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == BARAT):
+                    #depan, kiri, kanan, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+                
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # kanan, belakang, depan, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                   # deapan, kanan, kiri, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+            #4 posisi kurir selalu di kiri dan di atas bendera
+            elif (posisiBarisCourier < posisi_finis_baris and posisiKolomCourier < posisi_finis_kolom): 
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    # kanan,belakang, depan, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+                
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                    # depan, kiri, belakang, kanan
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+                elif (kurirUtama.check_arah_kepala() == BARAT):
+                    # kiri, belakng, kanan, depan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+
+                
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # depan, kanan, kiri, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                
+            #5 kurir selalu di atas dan se kolom dengan bendera
+            if (posisiBarisCourier < posisi_finis_baris and posisiKolomCourier == posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == BARAT):
+                    #kiri, depan, belakang, kanan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    #kanan, depan, belakang, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+
+                elif (kurirUtama.check_arah_kepala() == UTARA):
+                    # belakang, kanan, kiri, depan
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+
+                    
+                
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                   # depan, kiri, kanan, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+            #6 kurir selalu di bawah dan se kolom dengan bendera
+            elif (posisiBarisCourier > posisi_finis_baris and posisiKolomCourier == posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == BARAT):
+                   # kanan, belakang, depan, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # kiri, depan,belakan, kanan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == UTARA):
+                    # depan, kanan, kiri, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                    # belakang, kanan, kiri, depan
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+
+                
+            #7 posisi kurir selalu di sebelah kanan dan se baris dengan bendera
+            if (posisiBarisCourier == posisi_finis_baris and posisiKolomCourier > posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    # kiri, depan, kanan, belakang
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                    # kanan, depan, kiri, belakang
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+                
+                elif (kurirUtama.check_arah_kepala() == BARAT):
+                    # depan, kanan, belakang, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # belakang, kanan, depan, kiri
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+
+                
+            #8 posisi kurir selalu di sebelah kiri dan se baris dengan bendera
+            elif (posisiBarisCourier == posisi_finis_baris and posisiKolomCourier < posisi_finis_kolom):
+                if (kurirUtama.check_arah_kepala() == UTARA):
+                    # kanan, depan, belakang, kiri
+                    if(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                
+
+                elif (kurirUtama.check_arah_kepala() == SELATAN):
+                    # kiri, depan, belakang, kanan
+                    if(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+
+
+
+                elif (kurirUtama.check_arah_kepala() == BARAT):
+                    # belakang, kanan, kiri, depan
+                    if(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+
+
+                elif (kurirUtama.check_arah_kepala() == TIMUR):
+                    # depan, kanan, kiri, belakang
+                    if (kurirUtama.cek_tempat_kosong(DEPAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.majukan_courier()
+                    elif(kurirUtama.cek_tempat_kosong(KIRI_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kiri()
+                    elif(kurirUtama.cek_tempat_kosong(KANAN_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_kanan()
+                    elif(kurirUtama.cek_tempat_kosong(BELAKANG_COURIER, posisiKolomCourier, posisiBarisCourier)):
+                        kurirUtama.putar_belakang()
+
+
+            if(pencarian == 2):
+                
+                window.blit(target, (target_box_x * window_width // columns, target_box_y * window_height // rows))
+                print("selesai")
+                time.sleep(3)
+                return False
+            
+            time.sleep(1)
+    
     
                 
         pygame.display.flip()
